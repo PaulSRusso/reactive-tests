@@ -20,20 +20,16 @@ import reactor.core.publisher.Mono;
  * @since Feb 4, 2017
  */
 public class TestEmitterProcessor {
+   
+   private Logger logger = LoggerFactory.getLogger(TestEmitterProcessor.class);
 
-   private static final Logger LOG = LoggerFactory
-         .getLogger(TestEmitterProcessor.class);
 
-   // EmitterProcessor is a Ring Buffer implementation
-   // The ring buffer is a circular FIFO software queue.
-   // useful tool for transmitting data between asynchronous processes
-   //
-   // implements Reactive Streams Processor API
+   // Reactive Streams API: implements *Processor*
    private EmitterProcessor<String> processor;
 
    // Explicitly define a Consumer to be used in multiple 'doOnNext'
    private Consumer<String> doNextConsumer = 
-         s -> LOG.info("Consumed String {}", s);
+         s ->  logger.info("Consumed {}", s);
 
 
    @Before
@@ -41,23 +37,25 @@ public class TestEmitterProcessor {
       processor = EmitterProcessor.<String> create().connect();
    }
 
+   // Reactive Streams API: Mono implements *Publisher*
+
    @Test
-   public void testOneValue() {
+   public void testMonoStingValue() {
       // Mono implements Reactive Streams Publisher
       Mono<String> monoPublisher = processor
-            .doOnNext(doNextConsumer)
-            .next()
+            .doOnNext(doNextConsumer) // triggered when the Flux emits an item.
+            .next() // emit only the first item emitted by this Flux.
             .subscribe(); // start the chain and request unbounded demand
 
       // publish a value
-      processor.onNext("Value 100");
+      processor.onNext("Value 100"); // data notification sent by the Publisher 
       processor.onComplete(); // subscriber
-      String s = monoPublisher.block();
+      String s = monoPublisher.block(); // block until a next signal is received
       Assert.assertEquals("Value 100", s);
    }
 
    @Test
-   public void testMultpleValuesFilter() {
+   public void testMonoFilterListValue() {
 
       Predicate<String> predicateA = s -> s.startsWith("A");
       Predicate<String> predicateB = s -> s.startsWith("B");
@@ -81,7 +79,7 @@ public class TestEmitterProcessor {
       }
       processor.onComplete(); // subscriber
 
-      // read A values
+      // invoke Functions on publisherA 
       List<String> listA = publisherA.block();
 
       // test A values
@@ -89,7 +87,7 @@ public class TestEmitterProcessor {
       String actualA = String.join(",", listA);
       Assert.assertEquals(expectedA,actualA);
   
-      // read B values
+      // invoke Functions on publisherB 
       List<String> listB = publisherB.block();
 
       // test B values
@@ -98,8 +96,8 @@ public class TestEmitterProcessor {
       Assert.assertEquals(expectedB,actualB);
 
       // print A values and B values
-      listA.forEach(s -> System.out.println(s));
-      listB.forEach(s -> System.out.println(s));
+      listA.forEach(s ->  logger.info(s));
+      listB.forEach(s ->  logger.info(s));
 
    }
 

@@ -1,11 +1,11 @@
 package com.example.reactive;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.junit.Assert;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.MonoProcessor;
 
@@ -17,8 +17,7 @@ import reactor.core.publisher.MonoProcessor;
  */
 public class TestMonoProcessor {
 
-   private static final Logger LOG = LoggerFactory
-         .getLogger(TestMonoProcessor.class);
+   private Logger logger = LoggerFactory.getLogger(TestMonoProcessor.class);
    
    // extension that implements stateful semantics
    private MonoProcessor<String> promiseObject = MonoProcessor.create();
@@ -29,9 +28,9 @@ public class TestMonoProcessor {
    @Before
    public void setUp() {
       monoResult = promiseObject
-            .doOnSuccess(p -> LOG.info("Promise completed {}", p))
-            .doOnTerminate((s, e) -> LOG.info("Got value: {}", s))
-            .doOnError(t -> LOG.error(t.getMessage(), t));
+            .doOnSuccess(p -> logger.info("Promise completed {}", p))
+            .doOnTerminate((s, e) -> logger.info("Got value: {}", s))
+            .doOnError(t -> logger.error(t.getMessage(), t));
    }
    
    @Test
