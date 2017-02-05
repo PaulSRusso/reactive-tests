@@ -20,14 +20,14 @@ public class TestMonoProcessor {
    private Logger logger = LoggerFactory.getLogger(TestMonoProcessor.class);
    
    // extension that implements stateful semantics
-   private MonoProcessor<String> promiseObject = MonoProcessor.create();
+   private MonoProcessor<String> processor = MonoProcessor.create();
    
    // returns "at most one"
    private Mono<String> monoResult;
    
    @Before
    public void setUp() {
-      monoResult = promiseObject
+      monoResult = processor
             .doOnSuccess(p -> logger.info("Promise completed {}", p))
             .doOnTerminate((s, e) -> logger.info("Got value: {}", s))
             .doOnError(t -> logger.error(t.getMessage(), t));
@@ -36,8 +36,8 @@ public class TestMonoProcessor {
    @Test
    public void test1() {
       String monoText = "Test1";
-      promiseObject.subscribe(); // start the chain and request unbounded demand.
-      promiseObject.onNext(monoText);
+      processor.subscribe(); // start the chain and request unbounded demand.
+      processor.onNext(monoText);
       String result = monoResult.block();
       Assert.assertEquals(monoText, result);
    }
@@ -45,8 +45,8 @@ public class TestMonoProcessor {
    @Test
    public void test2() {
       String monoText = "Test2";
-      promiseObject.subscribe(); // start the chain and request unbounded demand.
-      promiseObject.onNext(monoText);
+      processor.subscribe(); // start the chain and request unbounded demand.
+      processor.onNext(monoText);
       String result = monoResult.block();
       Assert.assertEquals(monoText, result);
    }
