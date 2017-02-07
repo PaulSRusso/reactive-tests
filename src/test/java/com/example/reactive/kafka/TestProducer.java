@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2016 Pivotal Software Inc, All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.reactive.kafka;
 
 import java.text.SimpleDateFormat;
@@ -38,21 +23,13 @@ import reactor.kafka.sender.Sender;
 import reactor.kafka.sender.SenderOptions;
 import reactor.kafka.sender.SenderRecord;
 import reactor.kafka.sender.SenderResult;
-
 /**
- * <ol>
- * <li>export KAFKA_HOME={Kafka install dir}
- * <li>export TOPIC=test-topic
+ * See https://github.com/reactor/reactor-kafka/tree/master/reactor-kafka-samples/src/main/java/reactor/kafka/samples
  * 
- * <li>Start Zookeeper 
- *    <code>$KAFKA_HOME/bin/zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties > /tmp/zookeeper.log &</code>
+ * @author <a href="mailto:paul.russo@jchart.com>Paul Russo</a>
+ * @since Feb 6, 2017
  * 
- * <li>Start Kafka
- *    <code>$KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties > /tmp/kafka.log &</code>
- * 
- * <li>Create Kafka topic
- * <code>$KAFKA_HOME/bin/kafka-topics.sh --zookeeper localhost:2181 --create --replication-factor 1 --partitions 2 --topic $TOPIC</code>
- * </ol>
+ *  Start Zookeepeer and Kafka with the provided scripts in the kafka directory
  */
 public class TestProducer {
 

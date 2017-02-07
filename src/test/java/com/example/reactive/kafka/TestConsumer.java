@@ -1,18 +1,4 @@
-/*
- * Copyright (c) 2016 Pivotal Software Inc, All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.example.reactive.kafka;
 
 import java.text.SimpleDateFormat;
@@ -43,16 +29,12 @@ import reactor.kafka.receiver.ReceiverPartition;
 import reactor.kafka.receiver.ReceiverRecord;
 
 /**
- * Sample consumer application using Reactive API for Kafka. To run sample
- * consumer
- * <ol>
- * <li>Start Zookeeper and Kafka server
- * <li>Create Kafka topic {@link #TOPIC}
- * <li>Update {@link #BOOTSTRAP_SERVERS} and {@link #TOPIC} if required
- * <li>Run {@link TestConsumer} as Java application with all dependent jars in
- * the CLASSPATH (eg. from IDE).
- * <li>Shutdown Kafka server and Zookeeper when no longer required
- * </ol>
+ * See https://github.com/reactor/reactor-kafka/tree/master/reactor-kafka-samples/src/main/java/reactor/kafka/samples
+ * 
+ * @author <a href="mailto:paul.russo@jchart.com>Paul Russo</a>
+ * @since Feb 6, 2017
+ * 
+ *  Start Zookeepeer and Kafka with the provided scripts in the kafka directory
  */
 public class TestConsumer {
 
