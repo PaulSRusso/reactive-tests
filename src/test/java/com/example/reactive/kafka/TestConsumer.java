@@ -81,7 +81,7 @@ public class TestConsumer {
 
    @Test
    public void testConsumer() throws InterruptedException {
-      int count = 20;
+      int count = 50;
       CountDownLatch latch = new CountDownLatch(count);
       
       Consumer<ReceiverRecord<Integer, String>> messageConsumer = 
