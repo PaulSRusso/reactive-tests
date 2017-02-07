@@ -9,7 +9,8 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-def reactorCoreVersion = '3.0.3.RELEASE'
+def reactorCoreVersion = '3.0.4.RELEASE'
+def reactorKafkaVersion = '1.0.0.BUILD-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -22,17 +23,20 @@ dependencies {
   compile("io.projectreactor.addons:reactor-test:$reactorCoreVersion")
 
   // Reactive Streams
-  testCompile("org.reactivestreams:reactive-streams:1.0.0")
+  compile("org.reactivestreams:reactive-streams:1.0.0")
 
   // Reactor Core
-  testCompile("io.projectreactor:reactor-core:$reactorCoreVersion")
+  compile("io.projectreactor:reactor-core:$reactorCoreVersion")
   
+  // Reactve Kafka
+  compile("io.projectreactor.kafka:reactor-kafka:$reactorKafkaVersion")
+
   // rxjava 
   testCompile('io.reactivex.rxjava2:rxjava:2.0.0')
 
   // Logging
-  testCompile('org.slf4j:slf4j-api:1.7.22')
-  testCompile('org.slf4j:slf4j-simple:1.7.22')
+  compile('org.slf4j:slf4j-api:1.7.22')
+  compile('org.slf4j:slf4j-simple:1.7.22')
 
   // Test
   testCompile('junit:junit:4.12')

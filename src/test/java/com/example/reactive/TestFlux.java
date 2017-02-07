@@ -20,7 +20,7 @@ public class TestFlux {
 	public void testListToFlux() {
 
 		List<String> list = Arrays.asList("A1", "A2", "A3", "B4");
-		Flux<String> flux = Flux.fromIterable(list);
+		Flux<String> flux = Flux.fromIterable(list); // potentially unbounded stream
 		
 		// test if *all* values start with 'A'
 		Predicate<String> predicateA = s -> s.startsWith("A");

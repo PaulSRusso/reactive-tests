@@ -64,13 +64,13 @@ public class TestEmitterProcessor {
             .filter(predicateA)
             .doOnNext(doNextConsumer) 
             .collectList()
-            .subscribe();
+            .subscribe(); // start the chain and request unbounded demand
 
       Mono<List<String>> publisherB = processor
             .filter(predicateB)
             .doOnNext(doNextConsumer)
             .collectList()
-            .subscribe();
+            .subscribe(); // start the chain and request unbounded demand
 
       for (int i = 0; i < 5; i++) {
          // publish values
