@@ -63,7 +63,7 @@ public class TestProducer {
 
    @Test
    public void testProducer() throws InterruptedException {
-      int count = 20;
+      int count = 100;
       CountDownLatch latch = new CountDownLatch(count);
 
       // set senderOptions
@@ -76,7 +76,7 @@ public class TestProducer {
                  SenderRecord.create(new ProducerRecord<>(TOPIC, i, "Message_" + i), i)),true) 
               .doOnError(e -> log.error("Send failed", e))
               .subscribe(senderResultConsumer);
-      latch.await(10, TimeUnit.SECONDS);
+      latch.await(100, TimeUnit.SECONDS);
       sender.close();
 
    }

@@ -1,8 +1,8 @@
 #!/bin/bash
-KAFKA_HOME=/opt/kafka
+KAFKA_HOME=./kafka
 TOPIC=$1
 function print_usage() {
-    echo usage 'list-topic.sh TOPIC_NAME'
+    echo usage 'list-messages.sh TOPIC_NAME'
     exit
 }
 if [ -z "$TOPIC" ] 

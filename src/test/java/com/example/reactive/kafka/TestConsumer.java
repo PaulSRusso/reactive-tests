@@ -75,13 +75,14 @@ public class TestConsumer {
       receiverOptions
             .subscription(Collections.singleton(TOPIC))
             .addAssignListener(onAssignConsumer)
-            .addRevokeListener(onRevokeConsumer);
+            .addRevokeListener(onRevokeConsumer)
+            .commitBatchSize(10);
 
    }
 
    @Test
    public void testConsumer() throws InterruptedException {
-      int count = 50;
+      int count = 100;
       CountDownLatch latch = new CountDownLatch(count);
       
       Consumer<ReceiverRecord<Integer, String>> messageConsumer = 
@@ -94,7 +95,7 @@ public class TestConsumer {
 
       // request an unbounded demand
       Disposable disposable = kafkaFlux.subscribe(messageConsumer); 
-      latch.await(20, TimeUnit.SECONDS);
+      latch.await(count, TimeUnit.SECONDS);
       disposable.dispose();
    }
 

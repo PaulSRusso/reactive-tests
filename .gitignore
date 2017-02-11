@@ -1,5 +1,7 @@
 /build/
 /bin/
+/kafka-install/kafka/
+/kafka-install/logs/
 *.class
 *.war
 *.ear

@@ -14,6 +14,7 @@ import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Mono;
 
 /**
+ * Reference:
  * https://github.com/reactor/reactor-samples/blob/master/src/main/java/org/projectreactor/samples/FluxSamples.java
  * 
  * @author <a href="mailto:paul.russo@jchart.com>Paul Russo</a>
@@ -26,61 +27,55 @@ public class TestEmitterProcessor {
 
    // Reactive Streams API: implements *Processor*
    private EmitterProcessor<String> processor;
+   
+   // define publishers
+   // Reactive Streams API: Mono implements *Publisher*
+   private Mono<String> publisher1 = null;
+   private Mono<List<String>> publisher2A  = null;
+   private Mono<List<String>> publisher2B  = null;
+   private Mono<String> publisher3 = null;
 
-   // Explicitly define a Consumer to be used in multiple 'doOnNext'
    private Consumer<String> doNextConsumer = 
          s ->  logger.info("Consumed {}", s);
 
-
+   // Explicitly define a Consumer to be used in multiple 'doOnNext'
+   
    @Before
    public void setup() {
       processor = EmitterProcessor.<String> create().connect();
    }
 
-   // Reactive Streams API: Mono implements *Publisher*
-
    @Test
-   public void testMonoStingValue() {
-      // Mono implements Reactive Streams Publisher
-      Mono<String> monoPublisher = processor
-            .doOnNext(doNextConsumer) // triggered when the Flux emits an item.
-            .next() // emit only the first item emitted by this Flux.
-            .subscribe(); // start the chain and request unbounded demand
-
-      // publish a value
-      processor.onNext("Value 100"); // data notification sent by the Publisher 
+   public void testPublisher1() {
+      declarePublisher1();
+      String message = "Value 100";
+      publishMessage(message);
       processor.onComplete(); // subscriber
-      String s = monoPublisher.block(); // block until a next signal is received
+      String s = publisher1.block(); // block until a next signal is received
       Assert.assertEquals("Value 100", s);
    }
 
+   // Declaratively compose stream processing 
+   private void declarePublisher1() {
+      publisher1 = processor
+         .doOnNext(doNextConsumer) // triggered when the Flux emits an item.
+         .next() // emit only the first item emitted by this Flux
+         .subscribe(); // start the chain and request unbounded demand
+   }
+
    @Test
-   public void testMonoFilterListValue() {
-
-      Predicate<String> predicateA = s -> s.startsWith("A");
-      Predicate<String> predicateB = s -> s.startsWith("B");
-
-      Mono<List<String>> publisherA = processor
-            .filter(predicateA)
-            .doOnNext(doNextConsumer) 
-            .collectList()
-            .subscribe(); // start the chain and request unbounded demand
-
-      Mono<List<String>> publisherB = processor
-            .filter(predicateB)
-            .doOnNext(doNextConsumer)
-            .collectList()
-            .subscribe(); // start the chain and request unbounded demand
-
+   public void testPublisher2() {
+      declarePublisher2();
+      
       for (int i = 0; i < 5; i++) {
          // publish values
-         processor.onNext("A" + i); // subscriber onNext
-         processor.onNext("B" + i); 
+         publishMessage("A" + i);
+         publishMessage("B" + i);
       }
       processor.onComplete(); // subscriber
 
       // invoke Functions on publisherA 
-      List<String> listA = publisherA.block();
+      List<String> listA = publisher2A.block();
 
       // test A values
       String expectedA = "A0,A1,A2,A3,A4";
@@ -88,7 +83,7 @@ public class TestEmitterProcessor {
       Assert.assertEquals(expectedA,actualA);
   
       // invoke Functions on publisherB 
-      List<String> listB = publisherB.block();
+      List<String> listB = publisher2B.block();
 
       // test B values
       String expectedB = "B0,B1,B2,B3,B4";
@@ -101,20 +96,44 @@ public class TestEmitterProcessor {
 
    }
 
+   // Declaratively compose stream processing 
+   private void declarePublisher2() {
+      Predicate<String> predicateA = s -> s.startsWith("A");
+      publisher2A = processor
+         .filter(predicateA)
+         .doOnNext(doNextConsumer) 
+         .collectList()
+         .subscribe(); // observable: start the chain and request unbounded demand
+
+      publisher2B = processor
+         .filter(s -> s.startsWith("B")) // inline predicate
+         .doOnNext(doNextConsumer)
+         .collectList()
+         .subscribe(); // observable: start the chain and request unbounded demand
+   }
+   
    @Test
-   public void testTransform() {
-
-      Mono<String> monoPublisher = processor
-            .map(String::toUpperCase) // transform
-            .doOnNext(doNextConsumer)
-            .next()
-            .subscribe(); // start the chain and request unbounded demand
-
-      // publish a value
+   public void testPublisher3() {
+      declarePublisher3();
+      publishMessage("Value 1");
       processor.onNext("Value 1");
       processor.onComplete(); // subscriber
-      String s = monoPublisher.block();
+      String s = publisher3.block();
       Assert.assertEquals("VALUE 1", s);
    }
+
+   // Declaratively compose stream processing 
+   private void declarePublisher3() {
+      publisher3 = processor
+         .map(String::toUpperCase) // transform
+         .doOnNext(doNextConsumer)
+         .next()
+         .subscribe(); // start the chain and request unbounded demand
+   }
+   
+   private void publishMessage(String message) {
+      processor.onNext(message); // data notification sent by the Publisher 
+   }
+
 
 }

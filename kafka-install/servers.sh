@@ -1,4 +1,5 @@
 #!/bin/bash
+## stop kafka server will not work install in long dir path
 KAFKA_HOME=/opt/kafka
 ACTION=$1
 function print_usage() {
@@ -24,7 +25,7 @@ then
 else
    $KAFKA_HOME/bin/kafka-server-stop.sh 
    sleep 3
-   $KAFKA_HOME/bin/zookeeper-server-stop.sh 
+   $KAFKA_HOME/bin/zookeeper-server-stop.sh
 fi
 
 tail -f /tmp/kafka.log

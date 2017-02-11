@@ -1,8 +1,10 @@
 package com.example.reactive;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,6 +17,16 @@ import reactor.test.StepVerifier;
  * @since Feb 4, 2017
  */
 public class TestFlux {
+
+   @Test
+   public void testFluxToSream() {
+      List<String> list = Arrays.asList("A1", "A2", "A3", "B4");
+      Stream<?> stream = Flux.fromStream(list.stream())
+            .timeout(Duration.ofSeconds(30))
+            .log("test")
+            .toStream();
+      stream.forEach(s -> System.out.println(s));
+   }
 
 	@Test
 	public void testListToFlux() {
